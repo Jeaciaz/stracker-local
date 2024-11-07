@@ -2,16 +2,20 @@
   "name": "vite-template-solid",
   "version": "0.0.0",
   "description": "",
+  "homepage": "https://jeaciaz.github.io/stracker-local/",
   "scripts": {
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "predeploy": "bun build",
+    "deploy": "gh-pages -d dist"
   },
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "daisyui": "^4.12.14",
+    "gh-pages": "^6.2.0",
     "postcss": "^8.4.47",
     "solid-devtools": "^0.29.2",
     "tailwindcss": "^3.4.14",
