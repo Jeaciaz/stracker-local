@@ -16,7 +16,7 @@
   ],
   "start_url": "/stracker-local/",
   "background_color": "#20161f",
-  "theme_color": "#c59f60",
+  "theme_color": "#20161f",
   "display": "standalone",
   "orientation": "portrait"
 }
