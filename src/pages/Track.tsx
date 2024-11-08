@@ -1,7 +1,8 @@
 import { createSignal } from "solid-js"
 import JSConfetti from 'js-confetti'
 import { categories, Category } from "../categories";
-import { setSpendings, thisMonthSpendings } from "../spendings";
+import { setSpendings, spendingsByMonth, thisMonthSpendings } from "../spendings";
+import { formatDate } from "date-fns";
 
 const confetti = new JSConfetti()
 
@@ -38,7 +39,7 @@ export const Track = () => {
   }
 
   return (
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-6 flex-1">
       <label class="input input-bordered input-primary flex items-center gap-2">
         Amount
         <input
@@ -68,7 +69,29 @@ export const Track = () => {
           </button>
         ))}
       </div>
-      <div class="text-xl divider divider-primary">Total spent this month: {thisMonthSpendings().reduce((acc, s) => acc + s.amount, 0)}₪</div>
+      <div class="flex-1 -mr-4">
+        <ul class="timeline max-w-full overflow-auto">
+          <li class="text-xl text-primary sticky start-0 bg-base-100 z-10">
+            <div class="timeline-start">This month</div>
+            <div class="timeline-middle">₪</div>
+            <div class="timeline-end timeline-box">{thisMonthSpendings().reduce((acc, s) => acc + s.amount, 0).toFixed(2)}</div>
+            <hr class="bg-primary" />
+          </li>
+          {spendingsByMonth.slice(1).map(({ spendings, month }, i) => (
+            <li>
+              <hr class={i === 0 ? 'bg-primary' : 'bg-base-content'} />
+              <div class="timeline-start">{formatDate(month, "MMM ''yy")}</div>
+              <div class="timeline-middle">₪</div>
+              <div class="timeline-end timeline-box">{spendings.reduce((acc, s) => acc + s.amount, 0).toFixed(2)}</div>
+              <hr class="bg-base-content" />
+            </li>
+          ))}
+          <li>
+            <div class="timeline-middle px-2">No more expenses</div>
+            <div class="timeline-end timeline-box">😎</div>
+          </li>
+        </ul>
+      </div>
     </div>
   )
 }

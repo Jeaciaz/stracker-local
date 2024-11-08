@@ -41,7 +41,7 @@ const Spending = (spending: Spending) => {
   }
 
   return (
-    <div class="px-2 py-4 border-b-primary border-b-2 last-of-type:border-b-0 flex">
+    <div class="px-2 py-4 border-b-base-content border-b last-of-type:border-b-0 flex">
       <div class="flex flex-col gap-1">
         <div class="text-base">
           Spent {spending.amount}₪ on {spending.category}
