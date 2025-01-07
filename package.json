@@ -1,0 +1,25 @@
+{
+  "name": "stracker-offline",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun ./dev.ts",
+    "dev:frontend": "bun --filter @client dev",
+    "dev:backend": "bun --filter @server dev",
+    "gh-deploy": "bun --filter @client deploy",
+    "format": "prettier . --write"
+  },
+  "devDependencies": {
+    "@client": "workspace:*",
+    "@server": "workspace:*",
+    "@types/bun": "latest",
+    "prettier": "3.4.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "fastify": "^5.1.0"
+  }
+}
