@@ -1,10 +1,12 @@
 import {createTRPCProxyClient, httpBatchLink} from '@trpc/client'
 import type {AppRouter} from '@server'
+import {syncCredentials} from './sync-events'
 
 export const trpcClient = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
       url: 'http://localhost:3001/trpc',
+      headers: () => ({Authorization: syncCredentials()?.password}),
     }),
   ],
 })
@@ -24,6 +26,4 @@ export type Spending = Awaited<
 
 export type LocalSpending = Omit<Spending, 'username' | 'id'>
 
-export type SpendingCreate = Awaited<
-  Parameters<typeof trpcClient.spendings.uploadSpendings.mutate>[0]
->[number]
+export type SpendingCreate = Omit<Spending, 'id'> & {id?: string}

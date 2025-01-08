@@ -1,6 +1,7 @@
 import {fastifyTRPCPlugin} from '@trpc/server/adapters/fastify'
 import fastify from 'fastify'
 import {appRouter} from './routers'
+import { createContext } from './trpc'
 
 export type ServerOptions = {
   dev?: boolean
@@ -17,7 +18,7 @@ export function createServer({
 
   server.register(fastifyTRPCPlugin, {
     prefix,
-    trpcOptions: {router: appRouter},
+    trpcOptions: {router: appRouter, createContext},
   })
 
   const stop = () => server.close()

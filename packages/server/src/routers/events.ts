@@ -1,13 +1,13 @@
 import {z} from 'zod'
-import {publicProcedure, router} from '../trpc'
+import {protectedProcedure, publicProcedure, router} from '../trpc'
 import {EventCreate, EventFilters} from '../model/event'
 import {eventRepo} from '../repo/event'
 
 export const eventRouter = router({
-  getEvents: publicProcedure.input(EventFilters).query(() => {
-    return eventRepo.getList()
+  getEvents: protectedProcedure.input(EventFilters).query(({input}) => {
+    return eventRepo.getList(input)
   }),
-  createEvents: publicProcedure
+  createEvents: protectedProcedure
     .input(z.array(EventCreate))
     .mutation(({input}) => {
       return eventRepo.createMultiple(input)

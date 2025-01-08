@@ -1,22 +1,12 @@
 import {createSignal, Show, type Component} from 'solid-js'
 import {Track} from './pages/Track'
 import {Spendings} from './pages/Spendings'
-import {enableSync, syncCredentials} from './sync-events'
+import {enableSync, isSyncing, syncCredentials} from './sync-events'
 
 type Tab = 'track' | 'spendings'
 
 const App: Component = () => {
   const [tab, setTab] = createSignal<Tab>('track')
-  const [isSyncing, setIsSyncing] = createSignal(false)
-
-  const enableSyncWithLoading = () => {
-    setIsSyncing(true)
-    enableSync()
-      .catch(() => {
-        alert('Could not sync properly :(')
-      })
-      .finally(() => setIsSyncing(false))
-  }
 
   return (
     <div class="p-4 min-h-svh flex flex-col gap-6 relative">
@@ -25,7 +15,7 @@ const App: Component = () => {
         <Show when={!syncCredentials()}>
           <button
             class="btn btn-outline btn-xs"
-            onClick={enableSyncWithLoading}
+            onClick={enableSync}
           >
             Enable sync
           </button>

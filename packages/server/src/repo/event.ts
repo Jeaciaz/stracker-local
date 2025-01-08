@@ -55,11 +55,14 @@ const createMultiple = async (eventsCreate: EventCreate[]) => {
 const getList = (filters?: EventFilters) =>
   turso
     .execute({
-      sql: `SELECT * FROM ${EVENTS_TABLE_NAME} INNER JOIN ${SPENDINGS_TABLE_NAME} ON spendingId = ${SPENDINGS_TABLE_NAME}.id WHERE ${EVENTS_TABLE_NAME}.timestamp > ?`,
+      sql: `SELECT *, ${SPENDINGS_TABLE_NAME}.id as spendingId FROM ${EVENTS_TABLE_NAME} INNER JOIN ${SPENDINGS_TABLE_NAME} ON spendingId = ${SPENDINGS_TABLE_NAME}.id WHERE ${EVENTS_TABLE_NAME}.timestamp > ?`,
       args: [filters?.timestampFrom ?? 0],
     })
     .then(({rows}) =>
-      rows.map(row => ({...row, eventData: Spending.parse(row)})),
+      rows.map(row => ({
+        ...row,
+        eventData: Spending.parse({...row, id: row.spendingId}),
+      })),
     )
     .then(rows => z.array(Event).parse(rows))
 

@@ -51,29 +51,43 @@ const initialSync = async () => {
     spending =>
       ({
         type: 'AddSpending',
-        timestamp: Date.now(),
+        timestamp: spending.timestamp,
         eventData: {...spending, username: credentials.username},
       }) satisfies EventCreate,
   )
 
   setSyncEvents(events)
+  await sendUnsyncedEvents()
+  setSyncEvents([])
   await performSync()
 }
 
 export const [isSyncing, setIsSyncing] = createSignal(false)
 
+const sendUnsyncedEvents = () => {
+  const unsyncedEvents = syncEvents().filter(
+    event => event.timestamp > (lastSyncTs() ?? 0),
+  )
+  if (unsyncedEvents.length === 0) {
+    return Promise.resolve()
+  }
+  return trpcClient.events.createEvents.mutate(unsyncedEvents)
+}
+
+const getEventsFromSync = () => {
+  return trpcClient.events.getEvents
+    .query({
+      timestampFrom: lastSyncTs() ?? undefined,
+    })
+    .then(arr => arr.sort(timestampPredicate))
+}
+
 export const performSync = async () => {
+  if (!isSyncEnabled()) return
   setIsSyncing(true)
   try {
-    const unsyncedEvents = syncEvents().filter(
-      event => event.timestamp > (lastSyncTs() ?? 0),
-    )
-    const events = await trpcClient.events.getEvents
-      .query({
-        timestampFrom: lastSyncTs() ?? undefined,
-      })
-      .then(arr => arr.sort((a, b) => b.timestamp - a.timestamp))
-
+    const events = await getEventsFromSync()
+    await sendUnsyncedEvents()
     setSyncEvents(existingEvents =>
       existingEvents
         .concat(
@@ -89,8 +103,8 @@ export const performSync = async () => {
     )
 
     setLastSyncTs(Date.now())
-    await trpcClient.events.createEvents.mutate(unsyncedEvents)
-    setSyncEvents(events => events.filter(e => 'id' in e))
+  } catch (e) {
+    alert(e instanceof Error ? e : JSON.stringify(e))
   } finally {
     setIsSyncing(false)
   }

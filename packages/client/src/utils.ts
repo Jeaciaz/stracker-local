@@ -13,3 +13,8 @@ export const timestampPredicate = (
   a: {timestamp: number},
   b: {timestamp: number},
 ) => b.timestamp - a.timestamp
+
+export const timestampPredicateAsc = (
+  a: {timestamp: number},
+  b: {timestamp: number},
+) => a.timestamp - b.timestamp

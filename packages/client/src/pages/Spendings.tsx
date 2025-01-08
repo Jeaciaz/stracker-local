@@ -1,6 +1,6 @@
 import {formatDate} from 'date-fns'
 import {Show} from 'solid-js'
-import {insertEvent, syncCredentials} from '../sync-events'
+import {syncCredentials} from '../sync-events'
 import {spendings} from '../spendings/spendings'
 import {thisMonthSpendings} from '../spendings/util'
 import {LocalSpending, type Spending} from '../trpc'
@@ -69,7 +69,7 @@ const Spending = (spending: LocalSpending | Spending) => {
     )
       return
     const creds = syncCredentials()
-    if (creds && 'id' in spending) deleteSyncedSpending(spending.id)
+    if (creds && 'id' in spending) deleteSyncedSpending(spending.id, spending.timestamp)
     else deleteLocalSpending(spending.timestamp)
   }
 
