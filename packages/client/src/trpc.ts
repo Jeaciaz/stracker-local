@@ -22,6 +22,8 @@ export type Spending = Awaited<
   ReturnType<typeof trpcClient.spendings.getList.query>
 >[number]
 
-export type SpendingCreate = Omit<Awaited<
+export type LocalSpending = Omit<Spending, 'username' | 'id'>
+
+export type SpendingCreate = Awaited<
   Parameters<typeof trpcClient.spendings.uploadSpendings.mutate>[0]
->[number], 'username'>
+>[number]

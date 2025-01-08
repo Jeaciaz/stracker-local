@@ -1,12 +1,11 @@
 import {formatDate} from 'date-fns'
-import {
-  setSpendings,
-  type Spending,
-  spendings,
-  thisMonthSpendings,
-} from '../spendings'
 import {Show} from 'solid-js'
-import {insertEvent} from '../sync-events'
+import {insertEvent, syncCredentials} from '../sync-events'
+import {spendings} from '../spendings/spendings'
+import {thisMonthSpendings} from '../spendings/util'
+import {LocalSpending, type Spending} from '../trpc'
+import {deleteSyncedSpending, editSyncedSpending} from '../spendings/synced'
+import { deleteLocalSpending, editLocalSpending } from '../spendings/local'
 
 export const Spendings = () => {
   return (
@@ -36,7 +35,7 @@ export const Spendings = () => {
   )
 }
 
-const Spending = (spending: Spending) => {
+const Spending = (spending: LocalSpending | Spending) => {
   const editSpending = () => {
     const newAmount = prompt(
       'Please enter the correct amount for this spending:',
@@ -47,26 +46,19 @@ const Spending = (spending: Spending) => {
       return
     }
     const spendingToModify = spendings().find(
-      s => s.datetime === spending.datetime,
+      s => s.timestamp === spending.timestamp,
     )
     if (!spendingToModify) return
     const modifiedSpending = {
       ...spendingToModify,
       amount: parseFloat(newAmount),
     }
-    const {id, username, datetime, category, amount} = modifiedSpending
-    if (id && username) {
-      insertEvent({
-        type: 'EditSpending',
-        timestamp: Date.now(),
-        eventData: {timestamp: datetime, id, username, category, amount},
-      })
+    const creds = syncCredentials()
+    if (creds) {
+      editSyncedSpending(modifiedSpending as Spending) // TODO investigate later
+    } else {
+      editLocalSpending(modifiedSpending)
     }
-    setSpendings(
-      spendings().map(s =>
-        s.datetime !== spending.datetime ? s : modifiedSpending,
-      ),
-    )
   }
 
   const deleteSpending = () => {
@@ -76,20 +68,9 @@ const Spending = (spending: Spending) => {
       )
     )
       return
-    const spendingToDeleteIndex = spendings().findIndex(
-      s => s.datetime === spending.datetime,
-    )
-    const spendingToDeleteId = spendings()[spendingToDeleteIndex]?.id
-    if (spendingToDeleteId) {
-      insertEvent({
-        type: 'RemoveSpending',
-        timestamp: Date.now(),
-        eventData: {id: spendingToDeleteId},
-      })
-    }
-    setSpendings(spendings =>
-      spendings.filter((_, i) => i !== spendingToDeleteIndex),
-    )
+    const creds = syncCredentials()
+    if (creds && 'id' in spending) deleteSyncedSpending(spending.id)
+    else deleteLocalSpending(spending.timestamp)
   }
 
   return (
@@ -100,8 +81,8 @@ const Spending = (spending: Spending) => {
         </div>
         <div class="text-xs">
           {[
-            formatDate(spending.datetime, 'hh:mm:ss, dd.MM.yyyy'),
-            spending.username,
+            formatDate(spending.timestamp, 'hh:mm:ss, dd.MM.yyyy'),
+            'username' in spending && spending.username,
           ]
             .filter(Boolean)
             .join(' · ')}

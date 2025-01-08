@@ -1,21 +1,17 @@
 import {createSignal} from 'solid-js'
 import JSConfetti from 'js-confetti'
 import {categories, Category} from '../categories'
-import {setSpendings, spendingsByMonth, thisMonthSpendings} from '../spendings'
 import {formatDate} from 'date-fns'
-import { syncCredentials } from '../sync-events'
+import {createSpending} from '../spendings/spendings'
+import { spendingsByMonth, thisMonthSpendings } from '../spendings/util'
 
 const confetti = new JSConfetti()
 
 export const Track = () => {
   const [value, setValue] = createSignal('')
 
-  const createSpending = (category: Category, amount: number) => {
-    const credentials = syncCredentials()
-    setSpendings(spendings => [
-      {category: category, amount, datetime: Date.now()},
-      ...spendings,
-    ])
+  const createSpendingWithConfetti = (category: Category, amount: number) => {
+    createSpending({category, amount, timestamp: Date.now()})
     confetti.addConfetti({
       emojis: [categories.find(c => c.category === category)?.icon].filter(
         (v): v is string => v != undefined,
@@ -35,11 +31,11 @@ export const Track = () => {
         alert('Please specify a valid amount of money spent')
         return
       }
-      createSpending(category, parseFloat(promptedAmount))
+      createSpendingWithConfetti(category, parseFloat(promptedAmount))
     } else if (
       confirm(`You are spending ${amount}₪ on ${category}, confirm?`)
     ) {
-      createSpending(category, amount)
+      createSpendingWithConfetti(category, amount)
     } else {
       return
     }
@@ -92,7 +88,7 @@ export const Track = () => {
             </div>
             <hr class="bg-primary" />
           </li>
-          {spendingsByMonth.slice(1).map(({spendings, month}, i) => (
+          {spendingsByMonth().slice(1).map(({spendings, month}, i) => (
             <li>
               <hr class={i === 0 ? 'bg-primary' : 'bg-base-content'} />
               <div class="timeline-start">{formatDate(month, "MMM ''yy")}</div>
