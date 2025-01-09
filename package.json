@@ -7,6 +7,8 @@
     "dev": "bun ./dev.ts",
     "dev:frontend": "bun --filter @client dev",
     "dev:backend": "bun --filter @server dev",
+    "build": "bun --filter @client build",
+    "serve": "bun --filter @server serve",
     "gh-deploy": "bun --filter @client deploy",
     "format": "prettier . --write"
   },
