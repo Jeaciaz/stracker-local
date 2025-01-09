@@ -5,7 +5,7 @@ import {syncCredentials} from './sync-events'
 export const trpcClient = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: 'http://localhost:3001/trpc',
+      url: import.meta.env.VITE_BACKEND_URL,
       headers: () => ({Authorization: syncCredentials()?.password}),
     }),
   ],
