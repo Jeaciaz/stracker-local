@@ -2,6 +2,8 @@ import {fastifyTRPCPlugin} from '@trpc/server/adapters/fastify'
 import fastify from 'fastify'
 import {appRouter} from './routers'
 import { createContext } from './trpc'
+import fastifyCors from '@fastify/cors'
+import { env } from 'bun'
 
 export type ServerOptions = {
   dev?: boolean
@@ -19,6 +21,12 @@ export function createServer({
   server.register(fastifyTRPCPlugin, {
     prefix,
     trpcOptions: {router: appRouter, createContext},
+  })
+
+  server.register(fastifyCors, {
+    origin: [env.FRONTEND_ORIGIN],
+    methods: ['GET', 'POST'],
+    credentials: true,
   })
 
   const stop = () => server.close()
