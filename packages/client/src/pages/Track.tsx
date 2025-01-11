@@ -3,7 +3,7 @@ import JSConfetti from 'js-confetti'
 import {categories, Category} from '../categories'
 import {formatDate} from 'date-fns'
 import {createSpending} from '../spendings/spendings'
-import { spendingsByMonth, thisMonthSpendings } from '../spendings/util'
+import {spendingsByMonth, thisMonthSpendings} from '../spendings/util'
 
 const confetti = new JSConfetti()
 
@@ -68,7 +68,8 @@ export const Track = () => {
                 (={' '}
                 {thisMonthSpendings()
                   .filter(s => s.category === category.category)
-                  .reduce((acc, s) => acc + s.amount, 0)}
+                  .reduce((acc, s) => acc + s.amount, 0)
+                  .toFixed(2)}
                 ₪)
               </div>
             </div>
@@ -88,17 +89,21 @@ export const Track = () => {
             </div>
             <hr class="bg-primary" />
           </li>
-          {spendingsByMonth().slice(1).map(({spendings, month}, i) => (
-            <li>
-              <hr class={i === 0 ? 'bg-primary' : 'bg-base-content'} />
-              <div class="timeline-start">{formatDate(month, "MMM ''yy")}</div>
-              <div class="timeline-middle">₪</div>
-              <div class="timeline-end timeline-box">
-                {spendings.reduce((acc, s) => acc + s.amount, 0).toFixed(2)}
-              </div>
-              <hr class="bg-base-content" />
-            </li>
-          ))}
+          {spendingsByMonth()
+            .slice(1)
+            .map(({spendings, month}, i) => (
+              <li>
+                <hr class={i === 0 ? 'bg-primary' : 'bg-base-content'} />
+                <div class="timeline-start">
+                  {formatDate(month, "MMM ''yy")}
+                </div>
+                <div class="timeline-middle">₪</div>
+                <div class="timeline-end timeline-box">
+                  {spendings.reduce((acc, s) => acc + s.amount, 0).toFixed(2)}
+                </div>
+                <hr class="bg-base-content" />
+              </li>
+            ))}
           <li>
             <div class="timeline-middle px-2">No more expenses</div>
             <div class="timeline-end timeline-box">😎</div>

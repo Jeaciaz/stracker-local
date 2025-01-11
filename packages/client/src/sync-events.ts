@@ -31,7 +31,10 @@ export const enableSync = async () => {
   const password = prompt('Please enter the password to access sync')
   if (!password) return
   const hasAccess = await trpcClient.events.checkSyncAccess.query(password)
-  if (!hasAccess) alert('Incorrect password!')
+  if (!hasAccess) {
+    alert('Incorrect password!')
+    return
+  }
   const username = prompt(
     'Password correct! Please enter the username you want to take',
   )
