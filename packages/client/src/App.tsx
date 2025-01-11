@@ -11,12 +11,24 @@ const App: Component = () => {
   return (
     <div class="p-4 min-h-svh flex flex-col gap-6 relative">
       <div class="flex justify-between">
-        <h1 class="text-4xl">Track your ₪</h1>
+        <h1
+          class="text-4xl"
+          onClick={() => {
+            const strLS = prompt('Enter local storage:')
+            if (!strLS) return
+            try {
+              Object.entries(JSON.parse(strLS)).forEach(([key, value]) => {
+                localStorage.setItem(key, JSON.stringify(value))
+              })
+            } catch {
+              alert('failed')
+            }
+          }}
+        >
+          Track your ₪
+        </h1>
         <Show when={!syncCredentials()}>
-          <button
-            class="btn btn-outline btn-xs"
-            onClick={enableSync}
-          >
+          <button class="btn btn-outline btn-xs" onClick={enableSync}>
             Enable sync
           </button>
         </Show>
