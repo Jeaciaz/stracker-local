@@ -18,7 +18,13 @@ render(
       fallback={e => {
         const strE = e instanceof Error ? String(e) : JSON.stringify(e)
         alert(strE)
-        return <div>{strE}</div>
+        return (
+          <>
+            <div>{strE}</div>
+            <div>LS:</div>
+            <pre>{JSON.stringify(localStorage, null, 2)}</pre>
+          </>
+        )
       }}
     >
       <App />
