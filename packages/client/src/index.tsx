@@ -1,5 +1,5 @@
 /* @refresh reload */
-import {render} from 'solid-js/web'
+import {ErrorBoundary, render} from 'solid-js/web'
 
 import './index.css'
 import App from './App'
@@ -12,4 +12,17 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   )
 }
 
-render(() => <App />, root!)
+render(
+  () => (
+    <ErrorBoundary
+      fallback={e => {
+        const strE = e instanceof Error ? String(e) : JSON.stringify(e)
+        alert(strE)
+        return <div>{strE}</div>
+      }}
+    >
+      <App />
+    </ErrorBoundary>
+  ),
+  root!,
+)
