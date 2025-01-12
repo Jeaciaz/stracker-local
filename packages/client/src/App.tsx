@@ -18,7 +18,7 @@ const App: Component = () => {
             if (!strLS) return
             try {
               Object.entries(JSON.parse(strLS)).forEach(([key, value]) => {
-                localStorage.setItem(key, JSON.stringify(value))
+                localStorage.setItem(key, String(value))
               })
             } catch {
               alert('failed')
