@@ -12,23 +12,4 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   )
 }
 
-render(
-  () => (
-    <ErrorBoundary
-      fallback={e => {
-        const strE = e instanceof Error ? String(e) : JSON.stringify(e)
-        alert(strE)
-        return (
-          <>
-            <div>{strE}</div>
-            <div>LS:</div>
-            <pre>{JSON.stringify(localStorage, null, 2)}</pre>
-          </>
-        )
-      }}
-    >
-      <App />
-    </ErrorBoundary>
-  ),
-  root!,
-)
+render(() => <App />, root!)

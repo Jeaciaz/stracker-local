@@ -18,7 +18,16 @@ const App: Component = () => {
             if (!strLS) return
             try {
               Object.entries(JSON.parse(strLS)).forEach(([key, value]) => {
-                localStorage.setItem(key, String(value))
+                const strValue =
+                  key === 'spendings'
+                    ? JSON.stringify(
+                        JSON.parse(String(value)).map((spending: any) => ({
+                          ...spending,
+                          timestamp: spending.datetime,
+                        })),
+                      )
+                    : String(value)
+                localStorage.setItem(key, strValue)
               })
             } catch {
               alert('failed')
