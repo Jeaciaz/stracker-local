@@ -1,0 +1,42 @@
+services:
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    image: nginx
+    depends_on:
+      - server
+      - frontend
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+      - ./frontend/dist:/data/www
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    depends_on:
+      - nginx
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email sbeirakh@gmail.com -d stracker.jeaciaz.xyz --agree-tos
+
+  frontend:
+    container_name: frontend
+    build: 
+      context: .
+      dockerfile: ./packages/client/Dockerfile
+    volumes:
+      - ./frontend/dist:/dist
+
+  server:
+    container_name: server
+    build:
+      context: .
+      dockerfile: ./packages/server/Dockerfile
+    expose:
+      - 3001

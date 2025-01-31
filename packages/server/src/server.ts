@@ -33,7 +33,7 @@ export function createServer({
 
   const start = async () => {
     try {
-      await server.listen({port})
+      await server.listen({port, host: "0.0.0.0"})
       console.log(`Server listening on 0.0.0.0:${port}`)
     } catch (e) {
       server.log.error(e)
