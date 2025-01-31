@@ -28,7 +28,7 @@ services:
 
   frontend:
     build: 
-      context: ../..
-      dockerfile: ./packages/client
+      context: .
+      dockerfile: ./packages/client/Dockerfile
     volumes:
       - ./frontend/dist:/dist

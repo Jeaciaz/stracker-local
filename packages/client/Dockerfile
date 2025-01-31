@@ -14,4 +14,6 @@ WORKDIR /app/packages/client
 
 RUN bun run build
 
-COPY ./dist /dist
+RUN mkdir -p /dist
+
+CMD ["sh", "-c", "cp -r /app/packages/client/dist/. /dist/ && tail -f /dev/null"]
