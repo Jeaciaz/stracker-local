@@ -27,6 +27,8 @@ services:
     command: certonly --webroot -w /var/www/certbot --force-renewal --email sbeirakh@gmail.com -d stracker.jeaciaz.xyz --agree-tos
 
   frontend:
-    build: ./packages/client
+    build: 
+      context: ../..
+      dockerfile: ./packages/client
     volumes:
       - ./frontend/dist:/dist
