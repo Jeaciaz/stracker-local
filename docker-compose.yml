@@ -32,3 +32,8 @@ services:
       dockerfile: ./packages/client/Dockerfile
     volumes:
       - ./frontend/dist:/dist
+
+  server:
+    build:
+      context: .
+      dockerfile: ./packages/server/Dockerfile
