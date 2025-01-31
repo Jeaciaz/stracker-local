@@ -1,14 +1,11 @@
 services:
-  helloworld:
-    container_name: helloworld
-    image: crccheck/hello-world
-    expose:
-      - 8000
-
   nginx:
     container_name: nginx
     restart: unless-stopped
     image: nginx
+    depends_on:
+      - server
+      - frontend
     ports:
       - 80:80
       - 443:443
@@ -21,6 +18,8 @@ services:
   certbot:
     container_name: certbot
     image: certbot/certbot
+    depends_on:
+      - nginx
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
