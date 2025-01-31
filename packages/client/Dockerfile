@@ -7,3 +7,5 @@ COPY . .
 RUN bun install
 
 RUN bun run build
+
+COPY ./dist /dist

@@ -16,6 +16,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+      - ./frontend/dist:/data/www
 
   certbot:
     container_name: certbot
@@ -24,3 +25,8 @@ services:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
     command: certonly --webroot -w /var/www/certbot --force-renewal --email sbeirakh@gmail.com -d stracker.jeaciaz.xyz --agree-tos
+
+  frontend:
+    build: ./packages/client
+    volumes:
+      - ./frontend/dist:/dist
