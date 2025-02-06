@@ -74,7 +74,7 @@ const Spending = (spending: LocalSpending | Spending) => {
   }
 
   return (
-    <div class="px-2 py-4 border-b-base-content border-b last-of-type:border-b-0 flex">
+    <div class="px-2 py-4 border-b-base-content border-b last-of-type:border-b-0 flex gap-2">
       <div class="flex flex-col gap-1">
         <div class="text-base">
           Spent {spending.amount}₪ on {spending.category}
@@ -88,7 +88,7 @@ const Spending = (spending: LocalSpending | Spending) => {
             .join(' · ')}
         </div>
       </div>
-      <button class="btn btn-circle ms-auto" onPointerDown={editSpending}>
+      <button class="btn btn-circle ms-auto" onClick={editSpending}>
         <svg
           width="24"
           height="24"
@@ -102,7 +102,7 @@ const Spending = (spending: LocalSpending | Spending) => {
           />
         </svg>
       </button>
-      <button class="btn btn-circle" onPointerDown={deleteSpending}>
+      <button class="btn btn-circle" onClick={deleteSpending}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-6 w-6"

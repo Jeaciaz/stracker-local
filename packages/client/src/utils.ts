@@ -10,6 +10,7 @@ export const createLocalSignal = <T>(name: string, init: T) => {
     return [state, setState] as const
   } catch (e) {
     alert(e instanceof Error ? e : JSON.stringify(e))
+    return [() => init, () => {}] as const
   }
 }
 

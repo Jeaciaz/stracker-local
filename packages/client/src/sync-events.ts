@@ -1,6 +1,5 @@
 import {createLocalSignal, timestampPredicate} from './utils'
 import {Event, EventCreate, trpcClient} from './trpc'
-import {spendings} from './spendings/spendings'
 import {createSignal} from 'solid-js'
 import {localSpendings} from './spendings/local'
 
@@ -111,6 +110,12 @@ export const performSync = async () => {
   } finally {
     setIsSyncing(false)
   }
+}
+
+export const forceResync = async () => {
+  setLastSyncTs(null)
+  setSyncEvents([])
+  performSync()
 }
 
 performSync()
